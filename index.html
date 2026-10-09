@@ -27,6 +27,7 @@ label{display:block;font-weight:bold;margin:16px 0 7px}input,select{width:100%;p
 nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#fff;border-top:1px solid #e5e9ef;display:flex;justify-content:space-around;z-index:5}nav button{border:0;background:#fff;color:#49617f;font-size:21px}nav small{display:block;font-size:10px;margin-top:3px}
 .auth-back{border:0;background:none;color:#082f70;font-size:14px;margin-bottom:8px}
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="app">
@@ -99,8 +100,12 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 
 <nav id="bottomNav" style="display:none"><button onclick="show('home')">⌂<small>Accueil</small></button><button onclick="show('deposit')">＋<small>Dépôt</small></button><button onclick="show('withdraw')">−<small>Retrait</small></button><button onclick="show('history')">◷<small>Historique</small></button><button onclick="show('profile')">◉<small>Profil</small></button></nav>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>const sb = window.supabase.createClient(
+  'https://fbrenjemsllthzdkynnj.supabase.co',
+  'sb_publishable_x9wP5h5EPU2EEsk1De6cEg_xtsazNKx'
+);
 
-<script>
 function show(id){
  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
  document.getElementById(id).classList.add('active');
