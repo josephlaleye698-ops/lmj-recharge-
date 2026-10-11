@@ -272,6 +272,7 @@ async function logout(){
   await sb.auth.signOut();
   currentUser = null;
   $('adminBtn').style.display = 'none';
+  stopAdminWatch();
   $('balance').textContent = '— FCFA';
   show('auth');
   authMode('login');
@@ -347,10 +348,43 @@ async function sendWithdrawal(){
   msg('wdMsg','✅ Demande envoyée. Le montant est bloqué en attendant la validation.');
 }
 
+let adminTimer = null, lastPending = 0;
+function beep(){
+  try{
+    const C = window.AudioContext || window.webkitAudioContext; const ctx = new C();
+    [0, 0.25].forEach(t => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.frequency.value = 880; g.gain.value = 0.2;
+      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.15);
+    });
+  }catch(e){}
+}
+function stopAdminWatch(){
+  if(adminTimer){ clearInterval(adminTimer); adminTimer = null; }
+  lastPending = 0; document.title = 'LMJ RECHARGE';
+  $('adminBtn').textContent = '⚙ Espace administrateur';
+}
+function startAdminWatch(){
+  if(adminTimer) clearInterval(adminTimer);
+  adminWatch();
+  adminTimer = setInterval(adminWatch, 30000);
+}
+async function adminWatch(){
+  if(!currentUser) return;
+  const { data, error } = await sb.rpc('admin_list_pending');
+  if(error) return;
+  const n = data.length;
+  $('adminBtn').textContent = n ? '⚙ Espace administrateur (' + n + ' en attente)' : '⚙ Espace administrateur';
+  document.title = n ? '(' + n + ') LMJ RECHARGE' : 'LMJ RECHARGE';
+  if(n > lastPending){ beep(); if(navigator.vibrate) navigator.vibrate([200,100,200]); }
+  if(n !== lastPending && $('admin').classList.contains('active')) loadAdmin();
+  lastPending = n;
+}
 async function checkAdmin(){
   $('adminBtn').style.display = 'none';
   const { data } = await sb.rpc('is_admin');
-  if(data === true) $('adminBtn').style.display = 'block';
+  if(data === true){ $('adminBtn').style.display = 'block'; startAdminWatch(); }
+  else stopAdminWatch();
 }
 
 async function loadAdmin(){
@@ -375,7 +409,7 @@ async function decide(id, approve){
   if(!confirm(approve ? 'Valider cette opération ?' : 'Refuser cette opération ?')) return;
   const { error } = await sb.rpc('admin_decide', { p_id: id, p_approve: approve });
   if(error){ alert('Erreur : ' + error.message); }
-  loadAdmin();
+  loadAdmin(); adminWatch();
 }
 
 const MAX_DEPOSIT = 5000000;
