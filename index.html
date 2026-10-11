@@ -90,8 +90,9 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 </section>
 
 <section id="deposit" class="screen"><h2>Faire un dépôt</h2><p>Envoyez le paiement, puis indiquez la référence reçue. Le solde sera crédité après vérification par notre équipe.</p>
-<label>Montant (FCFA)</label><input id="depAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
-<label>Moyen de paiement</label><select id="depMethod"><option>MTN MoMo</option><option>Moov Money</option><option>Wave</option></select>
+<label>Moyen de paiement</label><select id="depMethod" onchange="updatePayInfo()"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Cash</option></select>
+<div id="payInfo" class="notice"></div>
+<label>Montant envoyé (FCFA, max 100 000)</label><input id="depAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
 <label>Référence de transaction</label><input id="depRef" placeholder="Ex. 123456789">
 <button id="depBtn" class="primary" onclick="sendDeposit()">Envoyer la demande</button>
 <div id="depMsg" class="message" style="display:none"></div></section>
@@ -99,13 +100,14 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <section id="withdraw" class="screen"><h2>Demander un retrait</h2><p>Le montant est bloqué dès la demande et envoyé après vérification.</p>
 <label>Montant (FCFA)</label><input id="wdAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
 <label>Numéro de réception</label><input id="wdPhone" type="tel" placeholder="+229 XX XX XX XX">
-<label>Moyen de réception</label><select id="wdMethod"><option>MTN MoMo</option><option>Moov Money</option><option>Wave</option></select>
+<label>Moyen de réception</label><select id="wdMethod"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Cash</option></select>
 <button id="wdBtn" class="primary" onclick="sendWithdrawal()">Demander le retrait</button>
 <div id="wdMsg" class="message" style="display:none"></div></section>
 
 <section id="history" class="screen"><h2>Historique</h2><div id="txList"><p>Chargement…</p></div></section>
 
-<section id="admin" class="screen"><h2>Administration</h2><p>Demandes en attente</p><div id="adminList"><p>Chargement…</p></div></section>
+<section id="admin" class="screen"><h2>Administration</h2><p>Demandes en attente</p><div id="adminList"><p>Chargement…</p></div>
+<h3 style="text-align:left;margin-top:26px">Dernières opérations traitées</h3><div id="adminHistory"></div></section>
 
 <section id="profile" class="screen"><h2>Mon profil</h2><div class="avatar" id="avatar">LM</div><h3 id="profileName">Client LMJ RECHARGE</h3>
 <div class="profile-row">☎ <span id="profilePhone">Numéro de téléphone</span></div>
@@ -134,6 +136,7 @@ function show(id){
   window.scrollTo(0,0);
   if(id==='history') loadHistory();
   if(id==='admin') loadAdmin();
+  if(id==='deposit') updatePayInfo();
   if(id==='home' || id==='profile') loadAccount();
 }
 function authMode(mode){
@@ -248,6 +251,7 @@ const esc = v => String(v==null?'':v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'
 async function sendDeposit(){
   const amount = Number($('depAmount').value), method = $('depMethod').value, ref = $('depRef').value.trim();
   if(!amount || amount < 500){ msg('depMsg','Montant minimum : 500 FCFA.'); return; }
+  if(amount > MAX_DEPOSIT){ msg('depMsg','Montant maximum : 100 000 FCFA par dépôt.'); return; }
   if(!ref){ msg('depMsg','Indiquez la référence de transaction.'); return; }
   $('depBtn').disabled = true;
   const { error } = await sb.rpc('request_deposit', { p_amount: amount, p_method: method, p_reference: ref });
@@ -281,6 +285,7 @@ async function checkAdmin(){
 async function loadAdmin(){
   const box = $('adminList');
   box.innerHTML = '<p>Chargement…</p>';
+  loadAdminHistory();
   const { data, error } = await sb.rpc('admin_list_pending');
   if(error){ box.innerHTML = '<p>Accès refusé.</p>'; return; }
   if(!data.length){ box.innerHTML = '<p>Aucune demande en attente.</p>'; return; }
@@ -302,13 +307,27 @@ async function decide(id, approve){
   loadAdmin();
 }
 
-// Restaure la session au chargement (et après clic sur le lien de confirmation)
-sb.auth.getSession().then(({ data }) => {
-  if(data.session){ currentUser = data.session.user; show('home'); checkAdmin(); }
-});
-sb.auth.onAuthStateChange((event, session) => {
-  if(event==='SIGNED_OUT'){ currentUser = null; }
-});
-</script>
-</body>
-      </html>
+const MAX_DEPOSIT = 100000;
+const PAY_NAME = 'Kolawolé Ayinla Marc Joseph LALEYE';
+const PAY_NUMBERS = {
+  'MTN MoMo':     { shown:'01 97 30 27 63', raw:'0197302763' },
+  'Celtiis Cash': { shown:'01 93 82 46 11', raw:'0193824611' },
+  'Moov Money':   null   // à compléter quand le numéro Moov est confirmé
+};
+function updatePayInfo(){
+  const m = $('depMethod').value, p = PAY_NUMBERS[m], box = $('payInfo');
+  box.textContent = '';
+  if(!p){ box.textContent = m + ' : numéro bientôt disponible. Choisissez un autre réseau ou contactez LMJ RECHARGE.'; return; }
+  const l1 = document.createElement('div');
+  l1.textContent = '1. Envoyez l\'argent par ' + m + ' à :';
+  const l2 = document.createElement('div');
+  l2.style.cssText = 'font-size:22px;font-weight:bold;margin:8px 0';
+  l2.textContent = p.shown;
+  const l3 = document.createElement('div');
+  l3.textContent = 'Nom : ' + PAY_NAME;
+  const btn = document.createElement('button');
+  btn.className = 'primary'; btn.style.marginTop = '12px'; btn.textContent = 'Copier le numéro';
+  btn.onclick = async () => { try{ await navigator.clipboard.writeText(p.raw); btn.textContent = 'Numéro copié ✓'; }catch(e){ btn.textContent = p.raw; } };
+  const l4 = document.createElement('div');
+  l4.style.marginTop = '12px';
+  l4.textContent = '2. Vérifiez que le nom affiché correspond, puis sai
