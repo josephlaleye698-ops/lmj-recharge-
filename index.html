@@ -9,7 +9,7 @@
 body{margin:0;background:#eef2f7;font-family:Arial,sans-serif;color:#10254b}
 .app{max-width:430px;min-height:100vh;margin:auto;background:#fff;box-shadow:0 0 30px #0001;padding-bottom:78px}
 header{height:70px;background:#082b68;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-.brand{font-size:21px;font-weight:800}.brand span{color:#f5b51b}.brand small{font-size:9px;letter-spacing:2px;display:block;margin-left:29px}.icon{background:none;border:0;color:#fff;font-size:22px}
+.brand{font-size:21px;font-weight:800}.brand span{color:#f5b51b}.brand small{font-size:9px;letter-spacing:2px;display:block;margin-left:29px}
 main{padding:22px}.screen{display:none}.screen.active{display:block}
 .screen h1{font-size:25px;margin:10px 0 8px}.screen h2{font-size:25px;margin-top:5px}.screen p{color:#667085}
 .auth-wrap{padding-top:25px}.auth-logo{text-align:center;margin:8px 0 28px}.crown{font-size:38px;color:#f5b51b}.auth-logo h1{font-size:32px;margin:4px 0;color:#082b68}.auth-logo p{margin:0;letter-spacing:3px;font-weight:bold;color:#52647e}
@@ -17,23 +17,20 @@ main{padding:22px}.screen{display:none}.screen.active{display:block}
 .auth-tabs{display:flex;background:#eef3f9;border-radius:12px;padding:4px;margin-bottom:22px}.auth-tabs button{flex:1;border:0;background:transparent;padding:12px;border-radius:9px;font-weight:bold;color:#65758b;font-size:15px}.auth-tabs .selected{background:#082f70;color:#fff}
 label{display:block;font-weight:bold;margin:16px 0 7px}input,select{width:100%;padding:14px;border:1px solid #ccd6e5;border-radius:10px;font-size:16px;outline:none}input:focus{border-color:#1765c0}
 .primary{width:100%;border:0;border-radius:10px;background:#082f70;color:#fff;padding:15px;font-size:16px;font-weight:bold;margin-top:22px}
+.primary:disabled{opacity:.6}
 .auth-note{text-align:center;color:#7b8798;font-size:12px;margin-top:18px}.message{background:#eef6ff;border-radius:12px;padding:14px;margin-top:15px;color:#234b7d;font-size:14px}
 .hello{margin:0;color:#667085}.balance{background:linear-gradient(135deg,#092e72,#1258bd);color:#fff;border-radius:18px;padding:22px;margin:20px 0}.balance span{opacity:.85}.balance b{display:block;font-size:27px;margin-top:8px}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions button{border:0;border-radius:14px;padding:20px 8px;color:#fff;font-size:25px}.actions span{display:block;font-size:14px;margin-top:7px}.deposit{background:#13b873}.withdraw{background:#1689e8}.history{background:#6950d9}.profile{background:#f4a51c}
 .notice{background:#eef6ff;border-radius:12px;padding:14px;margin-top:20px;color:#234b7d;font-size:14px}
-.tabs{display:flex;gap:8px;margin:20px 0}.tabs button{border:1px solid #ccd6e5;background:#fff;padding:9px 14px;border-radius:20px}.tabs .selected{background:#082f70;color:#fff}
-.tx{display:grid;grid-template-columns:35px 1fr auto;gap:10px;align-items:center;border-bottom:1px solid #edf0f5;padding:16px 0}.tx span{border-radius:50%;width:30px;height:30px;text-align:center;padding-top:6px}.green{background:#d9f7e9;color:#0a9c5c}.red{background:#ffe0e0;color:#d22}.tx small{display:block;color:#8a94a6;margin-top:4px}.tx strong{font-size:12px}.tx em{font-style:normal;font-size:10px;color:#0a9c5c;background:#d9f7e9;padding:5px;border-radius:8px}.pending{color:#a06a00!important;background:#fff0c9!important}
+.tx{display:grid;grid-template-columns:35px 1fr auto;gap:10px;align-items:center;border-bottom:1px solid #edf0f5;padding:16px 0}.tx span{border-radius:50%;width:30px;height:30px;text-align:center;padding-top:6px}.green{background:#d9f7e9;color:#0a9c5c}.red{background:#ffe0e0;color:#d22}.tx small{display:block;color:#8a94a6;margin-top:4px}.tx strong{font-size:12px;text-align:right}.tx em{font-style:normal;font-size:10px;color:#0a9c5c;background:#d9f7e9;padding:5px;border-radius:8px;display:inline-block;margin-top:4px}.pending{color:#a06a00!important;background:#fff0c9!important}.rejected{color:#d22!important;background:#ffe0e0!important}
 .avatar{width:72px;height:72px;border-radius:50%;background:#1264d2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:25px auto 10px}.screen h3{text-align:center}.profile-row{padding:17px 3px;border-bottom:1px solid #edf0f5;display:flex;gap:12px}.profile-row span{flex:1}.logout{width:100%;margin-top:25px;border:0;background:#ffe9e9;color:#d22;padding:13px;border-radius:10px}
 nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#fff;border-top:1px solid #e5e9ef;display:flex;justify-content:space-around;z-index:5}nav button{border:0;background:#fff;color:#49617f;font-size:21px}nav small{display:block;font-size:10px;margin-top:3px}
-.auth-back{border:0;background:none;color:#082f70;font-size:14px;margin-bottom:8px}
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="app">
 <header>
   <div class="brand"><span>♛</span> LMJ <small>RECHARGE</small></div>
-  <button class="icon" onclick="show('auth')">◉</button>
 </header>
 
 <main>
@@ -48,11 +45,11 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
     <div id="loginForm">
       <h2>Bienvenue 👋</h2>
       <p>Connectez-vous à votre compte LMJ RECHARGE.</p>
-      <label>Numéro de téléphone</label>
-      <input id="loginPhone" type="tel" placeholder="+229 XX XX XX XX">
+      <label>Adresse e-mail</label>
+      <input id="loginEmail" type="email" placeholder="exemple@gmail.com" autocomplete="email">
       <label>Mot de passe</label>
-      <input id="loginPass" type="password" placeholder="Votre mot de passe">
-      <button class="primary" onclick="login()">Se connecter</button>
+      <input id="loginPass" type="password" placeholder="Votre mot de passe" autocomplete="current-password">
+      <button id="loginBtn" class="primary" onclick="login()">Se connecter</button>
       <div id="loginMsg" class="message" style="display:none"></div>
       <p class="auth-note">Mot de passe oublié ? Contactez LMJ RECHARGE.</p>
     </div>
@@ -61,16 +58,16 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
       <h2>Créer un compte</h2>
       <p>Créez votre compte client en quelques secondes.</p>
       <label>Nom et prénom</label>
-      <input id="regName" placeholder="Ex. Marc Joseph">
+      <input id="regName" placeholder="Ex. Marc Joseph" autocomplete="name">
       <label>Numéro de téléphone</label>
-      <input id="regPhone" type="tel" placeholder="+229 XX XX XX XX">
-      <label>Adresse e-mail <span style="font-weight:normal;color:#8a94a6">(facultatif)</span></label>
-      <input id="regEmail" type="email" placeholder="exemple@gmail.com">
+      <input id="regPhone" type="tel" placeholder="+229 XX XX XX XX" autocomplete="tel">
+      <label>Adresse e-mail</label>
+      <input id="regEmail" type="email" placeholder="exemple@gmail.com" autocomplete="email">
       <label>Mot de passe</label>
-      <input id="regPass" type="password" placeholder="Minimum 6 caractères">
+      <input id="regPass" type="password" placeholder="Minimum 6 caractères" autocomplete="new-password">
       <label>Confirmer le mot de passe</label>
-      <input id="regPass2" type="password" placeholder="Confirmez le mot de passe">
-      <button class="primary" onclick="register()">Créer mon compte</button>
+      <input id="regPass2" type="password" placeholder="Confirmez le mot de passe" autocomplete="new-password">
+      <button id="regBtn" class="primary" onclick="register()">Créer mon compte</button>
       <div id="regMsg" class="message" style="display:none"></div>
       <p class="auth-note">En créant un compte, vous acceptez les conditions d'utilisation de LMJ RECHARGE.</p>
     </div>
@@ -78,8 +75,8 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 </section>
 
 <section id="home" class="screen">
-<p class="hello">Bonjour 👋</p><h1>Bienvenue sur <strong>LMJ RECHARGE</strong></h1>
-<div class="balance"><span>Solde disponible</span><b>125 000 FCFA</b></div>
+<p class="hello">Bonjour 👋</p><h1>Bienvenue <strong id="homeName">sur LMJ RECHARGE</strong></h1>
+<div class="balance"><span>Solde disponible</span><b id="balance">— FCFA</b></div>
 <div class="actions">
 <button class="deposit" onclick="show('deposit')">＋<span>Dépôt</span></button>
 <button class="withdraw" onclick="show('withdraw')">−<span>Retrait</span></button>
@@ -89,54 +86,151 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <div class="notice">🔒 Vos opérations sont protégées et vérifiées par notre équipe.</div>
 </section>
 
-<section id="deposit" class="screen"><h2>Faire un dépôt</h2><p>Envoyez une demande de dépôt à LMJ RECHARGE.</p><label>Montant</label><input type="number" placeholder="Ex. 10 000"><label>Moyen de paiement</label><select><option>Mobile Money</option><option>MoMo</option><option>Wave</option></select><label>Référence de transaction</label><input placeholder="Ex. 123456789"><button class="primary">Envoyer la demande</button></section>
+<section id="deposit" class="screen"><h2>Faire un dépôt</h2><div class="notice">Les dépôts en ligne ne sont pas encore disponibles. Contactez LMJ RECHARGE pour recharger votre compte.</div></section>
 
-<section id="withdraw" class="screen"><h2>Demander un retrait</h2><p>Indiquez le montant et le numéro de réception.</p><label>Montant</label><input type="number" placeholder="Ex. 10 000"><label>Numéro de réception</label><input placeholder="+229 XX XX XX XX"><label>Moyen de réception</label><select><option>Mobile Money</option><option>MoMo</option><option>Wave</option></select><button class="primary">Demander le retrait</button></section>
+<section id="withdraw" class="screen"><h2>Demander un retrait</h2><div class="notice">Les retraits en ligne ne sont pas encore disponibles. Contactez LMJ RECHARGE pour toute demande.</div></section>
 
-<section id="history" class="screen"><h2>Historique</h2><div class="tabs"><button class="selected">Tous</button><button>Dépôts</button><button>Retraits</button></div><div class="tx"><span class="green">↓</span><div><b>Dépôt</b><small>Aujourd'hui · 14:23</small></div><strong>+50 000 FCFA<br><em>Validé</em></strong></div><div class="tx"><span class="red">↑</span><div><b>Retrait</b><small>Hier · 09:15</small></div><strong>-20 000 FCFA<br><em class="pending">En attente</em></strong></div></section>
+<section id="history" class="screen"><h2>Historique</h2><div id="txList"><p>Chargement…</p></div></section>
 
-<section id="profile" class="screen"><h2>Mon profil</h2><div class="avatar">MJ</div><h3 id="profileName">Client LMJ RECHARGE</h3><div class="profile-row">👤 <span>Informations personnelles</span> ›</div><div class="profile-row">☎ <span id="profilePhone">Numéro de téléphone</span> ›</div><div class="profile-row">✉ <span>Adresse e-mail</span> ›</div><div class="profile-row">🔒 <span>Changer le mot de passe</span> ›</div><button class="logout" onclick="show('auth')">Se déconnecter</button></section>
+<section id="profile" class="screen"><h2>Mon profil</h2><div class="avatar" id="avatar">LM</div><h3 id="profileName">Client LMJ RECHARGE</h3>
+<div class="profile-row">☎ <span id="profilePhone">Numéro de téléphone</span></div>
+<div class="profile-row">✉ <span id="profileEmail">Adresse e-mail</span></div>
+<button class="logout" onclick="logout()">Se déconnecter</button></section>
 </main>
 
 <nav id="bottomNav" style="display:none"><button onclick="show('home')">⌂<small>Accueil</small></button><button onclick="show('deposit')">＋<small>Dépôt</small></button><button onclick="show('withdraw')">−<small>Retrait</small></button><button onclick="show('history')">◷<small>Historique</small></button><button onclick="show('profile')">◉<small>Profil</small></button></nav>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>const sb = window.supabase.createClient(
+<script>
+const sb = window.supabase.createClient(
   'https://fbrenjemsllthzdkynnj.supabase.co',
   'sb_publishable_x9wP5h5EPU2EEsk1De6cEg_xtsazNKx'
 );
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n).toLocaleString('fr-FR') + ' FCFA';
+let currentUser = null;
 
 function show(id){
- document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- document.getElementById('bottomNav').style.display=(id==='auth')?'none':'flex';
- window.scrollTo(0,0);
+  if(id!=='auth' && !currentUser){ id='auth'; }
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+  $('bottomNav').style.display = (id==='auth') ? 'none' : 'flex';
+  window.scrollTo(0,0);
+  if(id==='history') loadHistory();
+  if(id==='home' || id==='profile') loadAccount();
 }
 function authMode(mode){
- const login=mode==='login';
- document.getElementById('loginForm').style.display=login?'block':'none';
- document.getElementById('registerForm').style.display=login?'none':'block';
- document.getElementById('tabLogin').classList.toggle('selected',login);
- document.getElementById('tabRegister').classList.toggle('selected',!login);
+  const login = mode==='login';
+  $('loginForm').style.display = login ? 'block' : 'none';
+  $('registerForm').style.display = login ? 'none' : 'block';
+  $('tabLogin').classList.toggle('selected', login);
+  $('tabRegister').classList.toggle('selected', !login);
 }
-function login(){
- const p=document.getElementById('loginPhone').value.trim(), pass=document.getElementById('loginPass').value;
- const m=document.getElementById('loginMsg');m.style.display='block';
- if(!p||!pass){m.textContent='Veuillez renseigner votre numéro et votre mot de passe.';return}
- m.textContent='✅ Connexion de démonstration réussie.';
- setTimeout(()=>show('home'),500);
+function msg(id, text){ const m=$(id); m.style.display='block'; m.textContent=text; }
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+async function login(){
+  const email = $('loginEmail').value.trim(), pass = $('loginPass').value;
+  if(!email || !pass){ msg('loginMsg','Veuillez renseigner votre e-mail et votre mot de passe.'); return; }
+  $('loginBtn').disabled = true;
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  $('loginBtn').disabled = false;
+  if(error){
+    const t = (error.message||'').toLowerCase();
+    if(t.includes('confirm')) msg('loginMsg','Confirmez d\'abord votre adresse e-mail (vérifiez aussi vos spams).');
+    else msg('loginMsg','E-mail ou mot de passe incorrect.');
+    return;
+  }
+  currentUser = data.user;
+  $('loginPass').value = '';
+  $('loginMsg').style.display = 'none';
+  show('home');
 }
-function register(){
- const n=document.getElementById('regName').value.trim(),p=document.getElementById('regPhone').value.trim(),a=document.getElementById('regPass').value,b=document.getElementById('regPass2').value;
- const m=document.getElementById('regMsg');m.style.display='block';
- if(!n||!p||!a||!b){m.textContent='Veuillez remplir les champs obligatoires.';return}
- if(a.length<6){m.textContent='Le mot de passe doit contenir au moins 6 caractères.';return}
- if(a!==b){m.textContent='Les deux mots de passe ne correspondent pas.';return}
- document.getElementById('profileName').textContent=n;
- document.getElementById('profilePhone').textContent=p;
- m.textContent='✅ Compte de démonstration créé avec succès.';
- setTimeout(()=>show('home'),700);
+
+async function register(){
+  const name = $('regName').value.trim(), phone = $('regPhone').value.trim();
+  const email = $('regEmail').value.trim(), a = $('regPass').value, b = $('regPass2').value;
+  if(!name || !phone || !email || !a || !b){ msg('regMsg','Veuillez remplir tous les champs.'); return; }
+  if(!validEmail(email)){ msg('regMsg','Adresse e-mail invalide.'); return; }
+  if(a.length < 6){ msg('regMsg','Le mot de passe doit contenir au moins 6 caractères.'); return; }
+  if(a !== b){ msg('regMsg','Les deux mots de passe ne correspondent pas.'); return; }
+  $('regBtn').disabled = true;
+  const { data, error } = await sb.auth.signUp({
+    email, password: a,
+    options: {
+      data: { full_name: name, phone: phone },
+      emailRedirectTo: window.location.origin + window.location.pathname
+    }
+  });
+  $('regBtn').disabled = false;
+  if(error){
+    const t = (error.message||'').toLowerCase();
+    if(t.includes('rate')) msg('regMsg','Trop de tentatives. Réessayez dans quelques minutes.');
+    else if(t.includes('already')) msg('regMsg','Cette adresse e-mail est déjà utilisée.');
+    else msg('regMsg','Erreur : ' + error.message);
+    return;
+  }
+  if(data.session){
+    currentUser = data.user; show('home');
+  } else {
+    msg('regMsg','✅ Compte créé. Un e-mail de confirmation vous a été envoyé : cliquez sur le lien, puis connectez-vous.');
+    $('loginEmail').value = email;
+  }
 }
+
+async function logout(){
+  await sb.auth.signOut();
+  currentUser = null;
+  $('balance').textContent = '— FCFA';
+  show('auth');
+  authMode('login');
+}
+
+async function loadAccount(){
+  if(!currentUser) return;
+  const [p, w] = await Promise.all([
+    sb.from('profiles').select('full_name,phone,email').eq('id', currentUser.id).maybeSingle(),
+    sb.from('wallets').select('balance').eq('user_id', currentUser.id).maybeSingle()
+  ]);
+  const prof = p.data || {};
+  const name = prof.full_name || 'Client LMJ RECHARGE';
+  $('homeName').textContent = name;
+  $('profileName').textContent = name;
+  $('profilePhone').textContent = prof.phone || 'Numéro non renseigné';
+  $('profileEmail').textContent = prof.email || currentUser.email;
+  $('avatar').textContent = name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase();
+  $('balance').textContent = w.data ? fmt(w.data.balance) : '0 FCFA';
+}
+
+async function loadHistory(){
+  const box = $('txList');
+  if(!currentUser) return;
+  box.innerHTML = '<p>Chargement…</p>';
+  const { data, error } = await sb.from('transactions')
+    .select('type,amount,status,created_at')
+    .eq('user_id', currentUser.id)
+    .order('created_at', { ascending:false }).limit(50);
+  if(error){ box.innerHTML = '<p>Impossible de charger l\'historique.</p>'; return; }
+  if(!data.length){ box.innerHTML = '<p>Aucune opération pour le moment.</p>'; return; }
+  const labels = { pending:['En attente','pending'], approved:['Validé',''], rejected:['Refusé','rejected'] };
+  box.innerHTML = data.map(t=>{
+    const dep = t.type==='deposit';
+    const [txt, cls] = labels[t.status] || [t.status,''];
+    const d = new Date(t.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<div class="tx"><span class="${dep?'green':'red'}">${dep?'↓':'↑'}</span>
+      <div><b>${dep?'Dépôt':'Retrait'}</b><small>${d}</small></div>
+      <strong>${dep?'+':'-'}${fmt(t.amount)}<br><em class="${cls}">${txt}</em></strong></div>`;
+  }).join('');
+}
+
+// Restaure la session au chargement (et après clic sur le lien de confirmation)
+sb.auth.getSession().then(({ data }) => {
+  if(data.session){ currentUser = data.session.user; show('home'); }
+});
+sb.auth.onAuthStateChange((event, session) => {
+  if(event==='SIGNED_OUT'){ currentUser = null; }
+});
 </script>
 </body>
 </html>
