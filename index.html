@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LMJ RECHARGE</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#082b68">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#eef2f7;font-family:Arial,sans-serif;color:#10254b}
@@ -104,6 +107,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
       <p class="auth-note">En créant un compte, vous acceptez les conditions d'utilisation de LMJ RECHARGE.</p>
     </div>
   </div>
+<button id="installBtn" class="primary" style="display:none;background:#f5b51b;color:#10254b">📲 Installer l'application</button>
 </section>
 
 <section id="home" class="screen">
@@ -457,6 +461,17 @@ function bannerStart(){
 }
 bannerStart();
 
+
+if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; $('installBtn').style.display = 'block'; });
+$('installBtn').onclick = async () => {
+  if(!installEvt) return;
+  installEvt.prompt();
+  try{ await installEvt.userChoice; }catch(e){}
+  installEvt = null; $('installBtn').style.display = 'none';
+};
+window.addEventListener('appinstalled', () => { $('installBtn').style.display = 'none'; });
 
 // Restaure la session au chargement (et après clic sur le lien de confirmation)
 let recoveryMode = /type=recovery/.test(window.location.hash) || /type=recovery/.test(window.location.search);
