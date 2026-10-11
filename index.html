@@ -25,6 +25,8 @@ label{display:block;font-weight:bold;margin:16px 0 7px}input,select{width:100%;p
 .tx{display:grid;grid-template-columns:35px 1fr auto;gap:10px;align-items:center;border-bottom:1px solid #edf0f5;padding:16px 0}.tx span{border-radius:50%;width:30px;height:30px;text-align:center;padding-top:6px}.green{background:#d9f7e9;color:#0a9c5c}.red{background:#ffe0e0;color:#d22}.tx small{display:block;color:#8a94a6;margin-top:4px}.tx strong{font-size:12px;text-align:right}.tx em{font-style:normal;font-size:10px;color:#0a9c5c;background:#d9f7e9;padding:5px;border-radius:8px;display:inline-block;margin-top:4px}.pending{color:#a06a00!important;background:#fff0c9!important}.rejected{color:#d22!important;background:#ffe0e0!important}
 .avatar{width:72px;height:72px;border-radius:50%;background:#1264d2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:25px auto 10px}.screen h3{text-align:center}.profile-row{padding:17px 3px;border-bottom:1px solid #edf0f5;display:flex;gap:12px}.profile-row span{flex:1}.logout{width:100%;margin-top:25px;border:0;background:#ffe9e9;color:#d22;padding:13px;border-radius:10px}
 nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#fff;border-top:1px solid #e5e9ef;display:flex;justify-content:space-around;z-index:5}nav button{border:0;background:#fff;color:#49617f;font-size:21px}nav small{display:block;font-size:10px;margin-top:3px}
+.adm{border:1px solid #e1e7ef;border-radius:14px;padding:14px;margin-bottom:12px}.adm b{display:block;font-size:16px}.adm small{display:block;color:#667085;margin-top:4px;word-break:break-all}
+.adm .row{display:flex;gap:10px;margin-top:12px}.adm .row button{flex:1;border:0;border-radius:10px;padding:12px;color:#fff;font-weight:bold}.ok{background:#13b873}.no{background:#d22}
 </style>
 </head>
 <body>
@@ -83,14 +85,27 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <button class="history" onclick="show('history')">◷<span>Historique</span></button>
 <button class="profile" onclick="show('profile')">◉<span>Profil</span></button>
 </div>
+<button id="adminBtn" class="primary" style="display:none" onclick="show('admin')">⚙ Espace administrateur</button>
 <div class="notice">🔒 Vos opérations sont protégées et vérifiées par notre équipe.</div>
 </section>
 
-<section id="deposit" class="screen"><h2>Faire un dépôt</h2><div class="notice">Les dépôts en ligne ne sont pas encore disponibles. Contactez LMJ RECHARGE pour recharger votre compte.</div></section>
+<section id="deposit" class="screen"><h2>Faire un dépôt</h2><p>Envoyez le paiement, puis indiquez la référence reçue. Le solde sera crédité après vérification par notre équipe.</p>
+<label>Montant (FCFA)</label><input id="depAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
+<label>Moyen de paiement</label><select id="depMethod"><option>MTN MoMo</option><option>Moov Money</option><option>Wave</option></select>
+<label>Référence de transaction</label><input id="depRef" placeholder="Ex. 123456789">
+<button id="depBtn" class="primary" onclick="sendDeposit()">Envoyer la demande</button>
+<div id="depMsg" class="message" style="display:none"></div></section>
 
-<section id="withdraw" class="screen"><h2>Demander un retrait</h2><div class="notice">Les retraits en ligne ne sont pas encore disponibles. Contactez LMJ RECHARGE pour toute demande.</div></section>
+<section id="withdraw" class="screen"><h2>Demander un retrait</h2><p>Le montant est bloqué dès la demande et envoyé après vérification.</p>
+<label>Montant (FCFA)</label><input id="wdAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
+<label>Numéro de réception</label><input id="wdPhone" type="tel" placeholder="+229 XX XX XX XX">
+<label>Moyen de réception</label><select id="wdMethod"><option>MTN MoMo</option><option>Moov Money</option><option>Wave</option></select>
+<button id="wdBtn" class="primary" onclick="sendWithdrawal()">Demander le retrait</button>
+<div id="wdMsg" class="message" style="display:none"></div></section>
 
 <section id="history" class="screen"><h2>Historique</h2><div id="txList"><p>Chargement…</p></div></section>
+
+<section id="admin" class="screen"><h2>Administration</h2><p>Demandes en attente</p><div id="adminList"><p>Chargement…</p></div></section>
 
 <section id="profile" class="screen"><h2>Mon profil</h2><div class="avatar" id="avatar">LM</div><h3 id="profileName">Client LMJ RECHARGE</h3>
 <div class="profile-row">☎ <span id="profilePhone">Numéro de téléphone</span></div>
@@ -118,6 +133,7 @@ function show(id){
   $('bottomNav').style.display = (id==='auth') ? 'none' : 'flex';
   window.scrollTo(0,0);
   if(id==='history') loadHistory();
+  if(id==='admin') loadAdmin();
   if(id==='home' || id==='profile') loadAccount();
 }
 function authMode(mode){
@@ -146,6 +162,7 @@ async function login(){
   $('loginPass').value = '';
   $('loginMsg').style.display = 'none';
   show('home');
+  checkAdmin();
 }
 
 async function register(){
@@ -172,7 +189,7 @@ async function register(){
     return;
   }
   if(data.session){
-    currentUser = data.user; show('home');
+    currentUser = data.user; show('home'); checkAdmin();
   } else {
     msg('regMsg','✅ Compte créé. Un e-mail de confirmation vous a été envoyé : cliquez sur le lien, puis connectez-vous.');
     $('loginEmail').value = email;
@@ -182,6 +199,7 @@ async function register(){
 async function logout(){
   await sb.auth.signOut();
   currentUser = null;
+  $('adminBtn').style.display = 'none';
   $('balance').textContent = '— FCFA';
   show('auth');
   authMode('login');
@@ -224,13 +242,73 @@ async function loadHistory(){
   }).join('');
 }
 
+
+const esc = v => String(v==null?'':v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function sendDeposit(){
+  const amount = Number($('depAmount').value), method = $('depMethod').value, ref = $('depRef').value.trim();
+  if(!amount || amount < 500){ msg('depMsg','Montant minimum : 500 FCFA.'); return; }
+  if(!ref){ msg('depMsg','Indiquez la référence de transaction.'); return; }
+  $('depBtn').disabled = true;
+  const { error } = await sb.rpc('request_deposit', { p_amount: amount, p_method: method, p_reference: ref });
+  $('depBtn').disabled = false;
+  if(error){
+    msg('depMsg', (error.message||'').includes('uniq_deposit_ref') ? 'Cette référence a déjà été utilisée.' : 'Erreur : ' + error.message);
+    return;
+  }
+  $('depAmount').value=''; $('depRef').value='';
+  msg('depMsg','✅ Demande envoyée. Votre solde sera crédité après vérification.');
+}
+
+async function sendWithdrawal(){
+  const amount = Number($('wdAmount').value), method = $('wdMethod').value, phone = $('wdPhone').value.trim();
+  if(!amount || amount < 500){ msg('wdMsg','Montant minimum : 500 FCFA.'); return; }
+  if(!phone){ msg('wdMsg','Indiquez le numéro de réception.'); return; }
+  $('wdBtn').disabled = true;
+  const { error } = await sb.rpc('request_withdrawal', { p_amount: amount, p_method: method, p_phone: phone });
+  $('wdBtn').disabled = false;
+  if(error){ msg('wdMsg','Erreur : ' + error.message); return; }
+  $('wdAmount').value=''; $('wdPhone').value='';
+  msg('wdMsg','✅ Demande envoyée. Le montant est bloqué en attendant la validation.');
+}
+
+async function checkAdmin(){
+  $('adminBtn').style.display = 'none';
+  const { data } = await sb.rpc('is_admin');
+  if(data === true) $('adminBtn').style.display = 'block';
+}
+
+async function loadAdmin(){
+  const box = $('adminList');
+  box.innerHTML = '<p>Chargement…</p>';
+  const { data, error } = await sb.rpc('admin_list_pending');
+  if(error){ box.innerHTML = '<p>Accès refusé.</p>'; return; }
+  if(!data.length){ box.innerHTML = '<p>Aucune demande en attente.</p>'; return; }
+  box.innerHTML = data.map(t=>{
+    const dep = t.type==='deposit';
+    const d = new Date(t.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<div class="adm"><b>${dep?'Dépôt':'Retrait'} : ${esc(fmt(t.amount))}</b>
+      <small>${esc(t.full_name||'—')} · ${esc(t.client_phone||'')} · ${esc(t.email||'')}</small>
+      <small>${esc(t.method||'')} · ${dep?'Réf. '+esc(t.reference):'Envoyer à '+esc(t.phone)} · ${d}</small>
+      <div class="row"><button class="ok" onclick="decide('${esc(t.id)}',true)">Valider</button>
+      <button class="no" onclick="decide('${esc(t.id)}',false)">Refuser</button></div></div>`;
+  }).join('');
+}
+
+async function decide(id, approve){
+  if(!confirm(approve ? 'Valider cette opération ?' : 'Refuser cette opération ?')) return;
+  const { error } = await sb.rpc('admin_decide', { p_id: id, p_approve: approve });
+  if(error){ alert('Erreur : ' + error.message); }
+  loadAdmin();
+}
+
 // Restaure la session au chargement (et après clic sur le lien de confirmation)
 sb.auth.getSession().then(({ data }) => {
-  if(data.session){ currentUser = data.session.user; show('home'); }
+  if(data.session){ currentUser = data.session.user; show('home'); checkAdmin(); }
 });
 sb.auth.onAuthStateChange((event, session) => {
   if(event==='SIGNED_OUT'){ currentUser = null; }
 });
 </script>
 </body>
-</html>
+      </html>
