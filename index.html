@@ -330,4 +330,30 @@ function updatePayInfo(){
   btn.onclick = async () => { try{ await navigator.clipboard.writeText(p.raw); btn.textContent = 'Numéro copié ✓'; }catch(e){ btn.textContent = p.raw; } };
   const l4 = document.createElement('div');
   l4.style.marginTop = '12px';
-  l4.textContent = '2. Vérifiez que le nom affiché correspond, puis saisissez ci-d
+  l4.textContent = '2. Vérifiez que le nom affiché correspond, puis saisissez ci-dessous le montant et la référence reçue par SMS.';
+  box.append(l1, l2, l3, btn, l4);
+}
+
+async function loadAdminHistory(){
+  const box = $('adminHistory');
+  const { data, error } = await sb.rpc('admin_list_history');
+  if(error){ box.innerHTML = '<p>Historique indisponible.</p>'; return; }
+  if(!data.length){ box.innerHTML = '<p>Aucune opération traitée.</p>'; return; }
+  box.innerHTML = data.map(t=>{
+    const dep = t.type==='deposit', ok = t.status==='approved';
+    const d = t.processed_at ? new Date(t.processed_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+    return `<div class="adm"><b>${dep?'Dépôt':'Retrait'} : ${esc(fmt(t.amount))} <span style="color:${ok?'#0a9c5c':'#d22'}">${ok?'Validé':'Refusé'}</span></b>
+      <small>${esc(t.full_name||'—')} · ${esc(t.method||'')} · ${dep?'Réf. '+esc(t.reference):esc(t.phone)} · ${d}</small></div>`;
+  }).join('');
+}
+
+// Restaure la session au chargement (et après clic sur le lien de confirmation)
+sb.auth.getSession().then(({ data }) => {
+  if(data.session){ currentUser = data.session.user; show('home'); checkAdmin(); }
+});
+sb.auth.onAuthStateChange((event, session) => {
+  if(event==='SIGNED_OUT'){ currentUser = null; }
+});
+</script>
+</body>
+</html>
