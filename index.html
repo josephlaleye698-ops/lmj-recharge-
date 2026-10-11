@@ -312,7 +312,7 @@ const PAY_NAME = 'Kolawolé Ayinla Marc Joseph LALEYE';
 const PAY_NUMBERS = {
   'MTN MoMo':     { shown:'01 97 30 27 63', raw:'0197302763' },
   'Celtiis Cash': { shown:'01 93 82 46 11', raw:'0193824611' },
-  'Moov Money':   { shown:'01 65 86 45 12', raw:'0165864512' }   // à compléter...   // à compléter quand le numéro Moov est confirmé
+  'Moov Money':   { shown:'01 65 86 45 12', raw:'0165864512' }
 };
 function updatePayInfo(){
   const m = $('depMethod').value, p = PAY_NUMBERS[m], box = $('payInfo');
@@ -330,4 +330,4 @@ function updatePayInfo(){
   btn.onclick = async () => { try{ await navigator.clipboard.writeText(p.raw); btn.textContent = 'Numéro copié ✓'; }catch(e){ btn.textContent = p.raw; } };
   const l4 = document.createElement('div');
   l4.style.marginTop = '12px';
-  l4.textContent = '2. Vérifiez que le nom affiché correspond, puis sai
+  l4.textContent = '2. Vérifiez que le nom affiché correspond, puis saisissez ci-d
