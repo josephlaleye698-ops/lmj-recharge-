@@ -54,6 +54,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 @keyframes spPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes splashOut{to{opacity:0;visibility:hidden;pointer-events:none}}
 .brand{display:flex;align-items:center;gap:10px}.brand small{margin-left:0!important}.h-logo{width:46px;height:46px;border-radius:50%;background:#fff;object-fit:cover}.a-logo{width:120px;height:120px;border-radius:50%;display:block;margin:0 auto 6px;object-fit:cover;box-shadow:0 6px 18px #10254b22}.sp-logo img{width:100%;height:100%;object-fit:cover}
+.terms h3{text-align:left!important;font-size:17px;margin:20px 0 6px;color:#082b68}.terms p,.terms li{color:#344054;font-size:15px;line-height:1.5}.terms ul{padding-left:20px;margin:6px 0}
 </style>
 </head>
 <body>
@@ -102,9 +103,9 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
       <input id="regPass" type="password" placeholder="Minimum 8 caractères" autocomplete="new-password">
       <label>Confirmer le mot de passe</label>
       <input id="regPass2" type="password" placeholder="Confirmez le mot de passe" autocomplete="new-password">
+      <label style="font-weight:normal;display:flex;gap:10px;align-items:flex-start;font-size:14px;margin-top:18px"><input type="checkbox" id="regTerms" style="width:22px;height:22px;padding:0;margin:0;flex:none"><span>J'accepte les <a href="#" onclick="show('terms');return false" style="color:#082f70;font-weight:bold">conditions d'utilisation</a></span></label>
       <button id="regBtn" class="primary" onclick="register()">Créer mon compte</button>
       <div id="regMsg" class="message" style="display:none"></div>
-      <p class="auth-note">En créant un compte, vous acceptez les conditions d'utilisation de LMJ RECHARGE.</p>
     </div>
   </div>
 <button id="installBtn" class="primary" style="display:none;background:#f5b51b;color:#10254b">📲 Installer l'application</button>
@@ -177,9 +178,30 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <button id="resetBtn" class="primary" onclick="saveNewPassword()">Enregistrer</button>
 <div id="resetMsg" class="message" style="display:none"></div></section>
 
+<section id="terms" class="screen terms"><h2>Conditions d'utilisation</h2>
+<p><i>Dernière mise à jour : octobre 2026</i></p>
+<button class="primary" style="background:#eef3f9;color:#082f70;margin-top:6px" onclick="show(currentUser?'profile':'auth')">← Retour</button>
+<h3>1. Le service</h3>
+<p>LMJ RECHARGE vous permet de déposer des fonds sur votre compte et d'en demander le retrait, par MTN MoMo, Moov Money ou Celtiis Cash.</p>
+<h3>2. Votre compte</h3>
+<ul><li>Le compte est personnel : un compte par personne.</li><li>Les informations données à l'inscription (nom, téléphone, e-mail) doivent être exactes.</li><li>Gardez votre mot de passe secret. Vous êtes responsable des opérations faites depuis votre compte.</li><li>LMJ RECHARGE peut suspendre un compte en cas de fraude, de fausse déclaration ou d'usage abusif.</li></ul>
+<h3>3. Les dépôts</h3>
+<ul><li>Envoyez l'argent au numéro affiché sur l'écran Dépôt, puis saisissez le montant exact et la référence de transaction reçue par SMS.</li><li>Montant minimum : 500 FCFA. Montant maximum : 5 000 000 FCFA par dépôt.</li><li>Une référence de transaction ne peut être utilisée qu'une seule fois.</li><li>Votre solde est crédité après vérification du paiement reçu, en général en quelques minutes aux heures ouvrables.</li><li>Une demande est refusée si le paiement n'a pas été reçu, ou si le montant ou la référence est incorrect.</li></ul>
+<h3>4. Les retraits</h3>
+<ul><li>Montant minimum : 500 FCFA. Le montant demandé est bloqué sur votre solde dès l'envoi de la demande.</li><li>Après vérification, il est envoyé au numéro que vous avez indiqué, en général en quelques minutes aux heures ouvrables.</li><li>Si la demande est refusée, le montant est remis sur votre solde.</li><li>Vérifiez bien le numéro de réception : un envoi vers un numéro erroné saisi par vos soins ne peut pas toujours être récupéré.</li></ul>
+<h3>5. Vos données</h3>
+<p>Votre nom, votre téléphone et votre e-mail servent uniquement à gérer votre compte et vos opérations. Ils ne sont pas vendus.</p>
+<h3>6. Nous contacter</h3>
+<p>WhatsApp : +229 01 97 30 27 63<br>E-mail : josephlaleye698@gmail.com</p>
+<h3>7. Modifications</h3>
+<p>Ces conditions peuvent évoluer. Continuer à utiliser le service signifie que vous acceptez la version en vigueur.</p>
+<button class="primary" style="background:#eef3f9;color:#082f70" onclick="show(currentUser?'profile':'auth')">← Retour</button>
+</section>
+
 <section id="profile" class="screen"><h2>Mon profil</h2><div class="avatar" id="avatar">LM</div><h3 id="profileName">Client LMJ RECHARGE</h3>
 <div class="profile-row">☎ <span id="profilePhone">Numéro de téléphone</span></div>
 <div class="profile-row">✉ <span id="profileEmail">Adresse e-mail</span></div>
+<div class="profile-row" onclick="show('terms')" style="cursor:pointer">📄 <span>Conditions d'utilisation</span> ›</div>
 <button class="logout" onclick="logout()">Se déconnecter</button></section>
 </main>
 
@@ -198,10 +220,10 @@ const fmt = n => Number(n).toLocaleString('fr-FR') + ' FCFA';
 let currentUser = null;
 
 function show(id){
-  if(id!=='auth' && !currentUser){ id='auth'; }
+  if(id!=='auth' && id!=='terms' && !currentUser){ id='auth'; }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   $(id).classList.add('active');
-  $('bottomNav').style.display = (id==='auth' || id==='reset') ? 'none' : 'flex';
+  $('bottomNav').style.display = (id==='auth' || id==='reset' || (id==='terms' && !currentUser)) ? 'none' : 'flex';
   window.scrollTo(0,0);
   if(id==='history') loadHistory();
   if(id==='admin') loadAdmin();
@@ -241,6 +263,7 @@ async function register(){
   const name = $('regName').value.trim(), phone = $('regPhone').value.trim();
   const email = $('regEmail').value.trim(), a = $('regPass').value, b = $('regPass2').value;
   if(!name || !phone || !email || !a || !b){ msg('regMsg','Veuillez remplir tous les champs.'); return; }
+  if(!$('regTerms').checked){ msg('regMsg','Vous devez accepter les conditions d\'utilisation.'); return; }
   if(!validEmail(email)){ msg('regMsg','Adresse e-mail invalide.'); return; }
   if(a.length < 8){ msg('regMsg','Le mot de passe doit contenir au moins 8 caractères.'); return; }
   if(a !== b){ msg('regMsg','Les deux mots de passe ne correspondent pas.'); return; }
