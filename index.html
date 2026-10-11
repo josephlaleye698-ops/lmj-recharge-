@@ -27,6 +27,12 @@ label{display:block;font-weight:bold;margin:16px 0 7px}input,select{width:100%;p
 nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#fff;border-top:1px solid #e5e9ef;display:flex;justify-content:space-around;z-index:5}nav button{border:0;background:#fff;color:#49617f;font-size:21px}nav small{display:block;font-size:10px;margin-top:3px}
 .adm{border:1px solid #e1e7ef;border-radius:14px;padding:14px;margin-bottom:12px}.adm b{display:block;font-size:16px}.adm small{display:block;color:#667085;margin-top:4px;word-break:break-all}
 .adm .row{display:flex;gap:10px;margin-top:12px}.adm .row button{flex:1;border:0;border-radius:10px;padding:12px;color:#fff;font-weight:bold}.ok{background:#13b873}.no{background:#d22}
+.home-top{display:flex;justify-content:space-between;align-items:center}.home-top h1{margin:4px 0 0!important;font-size:22px!important}.avatar-sm{width:46px;height:46px;border-radius:50%;background:#1264d2;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:17px}
+.promo{background:linear-gradient(135deg,#082b68,#1258bd);border-radius:18px;padding:18px;margin:18px 0;color:#fff}.promo-head{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:12px}.promo-logo{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#fff}
+.promo-line{border-radius:12px;padding:11px 13px;margin-top:8px;font-size:14px;font-weight:bold}.promo-line.y{background:#f5b51b;color:#10254b}.promo-line.w{background:#fff;color:#082b68}
+.promo-code{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;flex-wrap:wrap}.promo-code b{background:#f5b51b;color:#10254b;border-radius:8px;padding:6px 10px;font-size:16px;letter-spacing:1px}.promo-code button{border:0;border-radius:8px;padding:8px 12px;font-weight:bold;background:#fff;color:#082b68}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}.stat{border-radius:16px;padding:16px;background:#fff;border:1px solid #e1e7ef;box-shadow:0 4px 12px #10254b10}.stat.blue{background:#1689e8;color:#fff;border:0}.stat small{display:block;font-size:13px;opacity:.9}.stat b{display:block;font-size:17px;margin-top:6px}
+.screen h3.sec{text-align:left;font-size:18px;margin:6px 0 4px}
 </style>
 </head>
 <body>
@@ -77,8 +83,18 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 </section>
 
 <section id="home" class="screen">
-<p class="hello">Bonjour 👋</p><h1>Bienvenue <strong id="homeName">sur LMJ RECHARGE</strong></h1>
+<div class="home-top"><div><p class="hello">Bonjour 👋</p><h1 id="homeName">LMJ RECHARGE</h1></div><div class="avatar-sm" id="homeAvatar">LM</div></div>
+<div class="promo">
+  <div class="promo-head"><img src="logo.png" alt="" class="promo-logo" onerror="this.style.display='none'"><span>LMJ RECHARGE</span></div>
+  <div class="promo-line y">DÉPÔT · Ajoutez du solde en quelques minutes</div>
+  <div class="promo-line w">RETRAIT · Accédez à votre solde quand vous voulez</div>
+  <div class="promo-code">CODE PROMO <b>LMJ99</b> <button onclick="copyPromo(this)">Copier</button></div>
+</div>
 <div class="balance"><span>Solde disponible</span><b id="balance">— FCFA</b></div>
+<div class="stats">
+  <div class="stat blue"><small>Total rechargé</small><b id="totIn">0 FCFA</b></div>
+  <div class="stat"><small>Total retiré</small><b id="totOut">0 FCFA</b></div>
+</div>
 <div class="actions">
 <button class="deposit" onclick="show('deposit')">＋<span>Dépôt</span></button>
 <button class="withdraw" onclick="show('withdraw')">−<span>Retrait</span></button>
@@ -86,6 +102,8 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <button class="profile" onclick="show('profile')">◉<span>Profil</span></button>
 </div>
 <button id="adminBtn" class="primary" style="display:none" onclick="show('admin')">⚙ Espace administrateur</button>
+<h3 class="sec" style="margin-top:22px">Dernières transactions</h3>
+<div id="homeTx"><p>Chargement…</p></div>
 <div class="notice">🔒 Vos opérations sont protégées et vérifiées par notre équipe.</div>
 </section>
 
@@ -222,6 +240,8 @@ async function loadAccount(){
   $('profileEmail').textContent = prof.email || currentUser.email;
   $('avatar').textContent = name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase();
   $('balance').textContent = w.data ? fmt(w.data.balance) : '0 FCFA';
+  $('homeAvatar').textContent = $('avatar').textContent;
+  loadHomeExtras();
 }
 
 async function loadHistory(){
@@ -344,6 +364,35 @@ async function loadAdminHistory(){
     const d = t.processed_at ? new Date(t.processed_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
     return `<div class="adm"><b>${dep?'Dépôt':'Retrait'} : ${esc(fmt(t.amount))} <span style="color:${ok?'#0a9c5c':'#d22'}">${ok?'Validé':'Refusé'}</span></b>
       <small>${esc(t.full_name||'—')} · ${esc(t.method||'')} · ${dep?'Réf. '+esc(t.reference):esc(t.phone)} · ${d}</small></div>`;
+  }).join('');
+}
+
+function copyPromo(btn){
+  const done = () => { btn.textContent = 'Copié ✓'; setTimeout(()=>{ btn.textContent = 'Copier'; }, 2000); };
+  try{ navigator.clipboard.writeText('LMJ99').then(done, ()=>{ btn.textContent = 'LMJ99'; }); }catch(e){ btn.textContent = 'LMJ99'; }
+}
+
+async function loadHomeExtras(){
+  if(!currentUser) return;
+  const [ok, last] = await Promise.all([
+    sb.from('transactions').select('type,amount').eq('user_id', currentUser.id).eq('status','approved'),
+    sb.from('transactions').select('type,amount,status,created_at').eq('user_id', currentUser.id).order('created_at',{ascending:false}).limit(3)
+  ]);
+  let tin = 0, tout = 0;
+  (ok.data||[]).forEach(t => { if(t.type==='deposit') tin += Number(t.amount); else tout += Number(t.amount); });
+  $('totIn').textContent = fmt(tin);
+  $('totOut').textContent = fmt(tout);
+  const box = $('homeTx');
+  if(last.error){ box.innerHTML = '<p>Impossible de charger les transactions.</p>'; return; }
+  if(!(last.data||[]).length){ box.innerHTML = '<p>Aucune transaction pour le moment.</p>'; return; }
+  const labels = { pending:['En attente','pending'], approved:['Validé',''], rejected:['Refusé','rejected'] };
+  box.innerHTML = last.data.map(t=>{
+    const dep = t.type==='deposit';
+    const [txt, cls] = labels[t.status] || [t.status,''];
+    const d = new Date(t.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<div class="tx"><span class="${dep?'green':'red'}">${dep?'↓':'↑'}</span>
+      <div><b>${dep?'Dépôt':'Retrait'}</b><small>${d}</small></div>
+      <strong>${dep?'+':'-'}${fmt(t.amount)}<br><em class="${cls}">${txt}</em></strong></div>`;
   }).join('');
 }
 
