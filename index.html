@@ -92,7 +92,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <section id="deposit" class="screen"><h2>Faire un dépôt</h2><p>Envoyez le paiement, puis indiquez la référence reçue. Le solde sera crédité après vérification par notre équipe.</p>
 <label>Moyen de paiement</label><select id="depMethod" onchange="updatePayInfo()"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Cash</option></select>
 <div id="payInfo" class="notice"></div>
-<label>Montant envoyé (FCFA, max 100 000)</label><input id="depAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
+<label>Montant envoyé (FCFA, max 1 000 000)</label><input id="depAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
 <label>Référence de transaction</label><input id="depRef" placeholder="Ex. 123456789">
 <button id="depBtn" class="primary" onclick="sendDeposit()">Envoyer la demande</button>
 <div id="depMsg" class="message" style="display:none"></div></section>
@@ -251,7 +251,7 @@ const esc = v => String(v==null?'':v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'
 async function sendDeposit(){
   const amount = Number($('depAmount').value), method = $('depMethod').value, ref = $('depRef').value.trim();
   if(!amount || amount < 500){ msg('depMsg','Montant minimum : 500 FCFA.'); return; }
-  if(amount > MAX_DEPOSIT){ msg('depMsg','Montant maximum : 100 000 FCFA par dépôt.'); return; }
+  if(amount > MAX_DEPOSIT){ msg('depMsg','Montant maximum : 1 000 000 FCFA par dépôt.'); return; }
   if(!ref){ msg('depMsg','Indiquez la référence de transaction.'); return; }
   $('depBtn').disabled = true;
   const { error } = await sb.rpc('request_deposit', { p_amount: amount, p_method: method, p_reference: ref });
@@ -307,7 +307,7 @@ async function decide(id, approve){
   loadAdmin();
 }
 
-const MAX_DEPOSIT = 100000;
+const MAX_DEPOSIT = 1000000;
 const PAY_NAME = 'Kolawolé Ayinla Marc Joseph LALEYE';
 const PAY_NUMBERS = {
   'MTN MoMo':     { shown:'01 97 30 27 63', raw:'0197302763' },
