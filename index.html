@@ -55,6 +55,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 @keyframes splashOut{to{opacity:0;visibility:hidden;pointer-events:none}}
 .brand{display:flex;align-items:center;gap:10px}.brand small{margin-left:0!important}.h-logo{width:46px;height:46px;border-radius:50%;background:#fff;object-fit:cover}.a-logo{width:120px;height:120px;border-radius:50%;display:block;margin:0 auto 6px;object-fit:cover;box-shadow:0 6px 18px #10254b22}.sp-logo img{width:100%;height:100%;object-fit:cover}
 .terms h3{text-align:left!important;font-size:17px;margin:20px 0 6px;color:#082b68}.terms p,.terms li{color:#344054;font-size:15px;line-height:1.5}.terms ul{padding-left:20px;margin:6px 0}
+.info{background:#fff6e0;border-left:4px solid #f5b51b;border-radius:10px;padding:12px 14px;color:#6b4e00;font-size:14px;line-height:1.5;margin:10px 0}.phone-row{display:flex;border:1px solid #ccd6e5;border-radius:10px;overflow:hidden}.phone-row span{padding:14px;background:#eef3f9;font-weight:bold;color:#082f70}.phone-row input{border:0;border-radius:0}
 </style>
 </head>
 <body>
@@ -103,7 +104,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
       <input id="regPass" type="password" placeholder="Minimum 8 caractères" autocomplete="new-password">
       <label>Confirmer le mot de passe</label>
       <input id="regPass2" type="password" placeholder="Confirmez le mot de passe" autocomplete="new-password">
-      <label style="font-weight:normal;display:flex;gap:10px;align-items:flex-start;font-size:14px;margin-top:18px"><input type="checkbox" id="regTerms" style="width:22px;height:22px;padding:0;margin:0;flex:none"><span>J'accepte les <a href="#" onclick="show('terms');return false" style="color:#082f70;font-weight:bold">conditions d'utilisation</a></span></label>
+      <label style="font-weight:normal;display:flex;gap:10px;align-items:flex-start;font-size:14px;margin-top:18px"><input type="checkbox" id="regTerms" style="width:22px;height:22px;padding:0;margin:0;flex:none"><span>J'ai 18 ans ou plus et j'accepte les <a href="#" onclick="show('terms');return false" style="color:#082f70;font-weight:bold">conditions d'utilisation</a></span></label>
       <button id="regBtn" class="primary" onclick="register()">Créer mon compte</button>
       <div id="regMsg" class="message" style="display:none"></div>
     </div>
@@ -118,8 +119,8 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
   <div class="b-head"><img data-logo alt="" class="b-logo"><span>LMJ RECHARGE</span></div>
   <div class="b-slides">
     <div class="b-slide on">
-      <div class="b-chip y">DÉPÔT · Ajoutez du solde en quelques minutes</div>
-      <div class="b-chip w">RETRAIT · Accédez à votre solde quand vous voulez</div>
+      <div class="b-chip y">DÉPÔT · Rechargez votre compte 1xBet en quelques minutes</div>
+      <div class="b-chip w">RETRAIT · Retirez vos gains sur votre mobile money</div>
     </div>
     <div class="b-slide">
       <div class="b-big">Utilisez notre code promo</div>
@@ -135,13 +136,12 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
   <div class="b-dots"><i class="on"></i><i></i><i></i></div>
   <div class="b-foot"><span>CODE PROMO <b>LMJ99</b></span><a href="https://wa.me/2290197302763" target="_blank" rel="noopener">WhatsApp +229 01 97 30 27 63</a><a href="mailto:josephlaleye698@gmail.com">josephlaleye698@gmail.com</a></div>
 </div>
-<div class="balance"><span>Solde disponible</span><b id="balance">— FCFA</b></div>
 <div class="stats">
   <div class="stat blue"><small>Total rechargé</small><b id="totIn">0 FCFA</b></div>
   <div class="stat"><small>Total retiré</small><b id="totOut">0 FCFA</b></div>
 </div>
 <div class="actions">
-<button class="deposit" onclick="show('deposit')">＋<span>Dépôt</span></button>
+<button class="deposit" onclick="show('deposit')">⚡<span>Recharge</span></button>
 <button class="withdraw" onclick="show('withdraw')">−<span>Retrait</span></button>
 <button class="history" onclick="show('history')">◷<span>Historique</span></button>
 <button class="profile" onclick="show('profile')">◉<span>Profil</span></button>
@@ -152,19 +152,25 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <div class="notice">🔒 Vos opérations sont protégées et vérifiées par notre équipe.</div>
 </section>
 
-<section id="deposit" class="screen"><h2>Faire un dépôt</h2><p>Envoyez le paiement, puis indiquez la référence reçue. Le solde sera crédité après vérification par notre équipe.</p>
-<label>Moyen de paiement</label><select id="depMethod" onchange="updatePayInfo()"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Cash</option></select>
-<div id="payInfo" class="notice"></div>
-<label>Montant envoyé (FCFA, max 5 000 000)</label><input id="depAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
-<label>Référence de transaction</label><input id="depRef" placeholder="Ex. 123456789">
-<button id="depBtn" class="primary" onclick="sendDeposit()">Envoyer la demande</button>
+<section id="deposit" class="screen"><h2>Procéder à la recharge</h2>
+<div class="info"><b>Comment ça marche</b><br>1. Renseignez votre ID 1xBet, le montant et votre moyen de paiement.<br>2. Vous recevez une demande de paiement sur votre téléphone : confirmez-la avec votre code secret.<br>3. Une fois le paiement confirmé, votre compte 1xBet est crédité après vérification, en quelques minutes aux heures ouvrables.</div>
+<label>ID 1xBet</label><input id="depXbet" inputmode="numeric" placeholder="Entrez votre ID 1xBet">
+<label>Montant (FCFA)</label><input id="depAmount" type="number" inputmode="numeric" placeholder="Minimum 100 FCFA">
+<label>Moyen de paiement</label><select id="depMethod"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Cash</option></select>
+<label>Numéro de téléphone (celui qui paie)</label>
+<div class="phone-row"><span>+229</span><input id="depPhone" type="tel" inputmode="numeric" placeholder="01XXXXXXXX"></div>
+<button id="depBtn" class="primary" onclick="sendDeposit()">⚡ Procéder à la recharge</button>
 <div id="depMsg" class="message" style="display:none"></div></section>
 
-<section id="withdraw" class="screen"><h2>Demander un retrait</h2><p>Le montant est bloqué dès la demande et envoyé après vérification.</p>
-<label>Montant (FCFA)</label><input id="wdAmount" type="number" inputmode="numeric" placeholder="Ex. 10000">
-<label>Numéro de réception</label><input id="wdPhone" type="tel" placeholder="+229 XX XX XX XX">
+<section id="withdraw" class="screen"><h2>Procéder au retrait</h2>
+<div class="info"><b>Comment ça marche</b><br>1. Générez un code de retrait sur votre compte 1xBet.<br>2. Saisissez votre ID, ce code, le montant et le numéro où recevoir l'argent.<br>3. Après vérification, nous envoyons l'argent sur votre mobile money.</div>
+<label>ID 1xBet</label><input id="wdXbet" inputmode="numeric" placeholder="Entrez votre ID 1xBet">
+<label>Code de retrait 1xBet</label><input id="wdCode" placeholder="Code reçu sur 1xBet">
+<label>Montant (FCFA)</label><input id="wdAmount" type="number" inputmode="numeric" placeholder="Minimum 500 FCFA">
 <label>Moyen de réception</label><select id="wdMethod"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Cash</option></select>
-<button id="wdBtn" class="primary" onclick="sendWithdrawal()">Demander le retrait</button>
+<label>Numéro de réception</label>
+<div class="phone-row"><span>+229</span><input id="wdPhone" type="tel" inputmode="numeric" placeholder="01XXXXXXXX"></div>
+<button id="wdBtn" class="primary" onclick="sendWithdrawal()">⚡ Procéder au retrait</button>
 <div id="wdMsg" class="message" style="display:none"></div></section>
 
 <section id="history" class="screen"><h2>Historique</h2><div id="txList"><p>Chargement…</p></div></section>
@@ -182,13 +188,13 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <p><i>Dernière mise à jour : octobre 2026</i></p>
 <button class="primary" style="background:#eef3f9;color:#082f70;margin-top:6px" onclick="show(currentUser?'profile':'auth')">← Retour</button>
 <h3>1. Le service</h3>
-<p>LMJ RECHARGE vous permet de déposer des fonds sur votre compte et d'en demander le retrait, par MTN MoMo, Moov Money ou Celtiis Cash.</p>
+<p>LMJ RECHARGE vous aide à recharger votre compte 1xBet (dépôt) et à retirer vos gains sur votre mobile money (retrait), par MTN MoMo, Moov Money ou Celtiis Cash. LMJ RECHARGE ne conserve aucun solde pour vous. Ce service est réservé aux personnes de 18 ans ou plus. Les jeux d'argent comportent des risques : jouez de façon responsable.</p>
 <h3>2. Votre compte</h3>
 <ul><li>Le compte est personnel : un compte par personne.</li><li>Les informations données à l'inscription (nom, téléphone, e-mail) doivent être exactes.</li><li>Gardez votre mot de passe secret. Vous êtes responsable des opérations faites depuis votre compte.</li><li>LMJ RECHARGE peut suspendre un compte en cas de fraude, de fausse déclaration ou d'usage abusif.</li></ul>
 <h3>3. Les dépôts</h3>
-<ul><li>Envoyez l'argent au numéro affiché sur l'écran Dépôt, puis saisissez le montant exact et la référence de transaction reçue par SMS.</li><li>Montant minimum : 500 FCFA. Montant maximum : 5 000 000 FCFA par dépôt.</li><li>Une référence de transaction ne peut être utilisée qu'une seule fois.</li><li>Votre solde est crédité après vérification du paiement reçu, en général en quelques minutes aux heures ouvrables.</li><li>Une demande est refusée si le paiement n'a pas été reçu, ou si le montant ou la référence est incorrect.</li></ul>
+<ul><li>Saisissez l'ID de votre compte 1xBet, le montant et le numéro de téléphone qui paie. Vous recevez une demande de paiement sur ce téléphone : confirmez-la avec votre code secret.</li><li>Montant minimum : 100 FCFA. Montant maximum : 5 000 000 FCFA par dépôt.</li><li>Votre compte 1xBet est crédité après vérification du paiement reçu, en général en quelques minutes aux heures ouvrables.</li><li>Une demande est refusée si le paiement n'est pas confirmé, ou si l'ID 1xBet est incorrect.</li><li>Vérifiez bien votre ID 1xBet : un crédit sur un ID erroné saisi par vos soins ne peut pas être annulé.</li></ul>
 <h3>4. Les retraits</h3>
-<ul><li>Montant minimum : 500 FCFA. Le montant demandé est bloqué sur votre solde dès l'envoi de la demande.</li><li>Après vérification, il est envoyé au numéro que vous avez indiqué, en général en quelques minutes aux heures ouvrables.</li><li>Si la demande est refusée, le montant est remis sur votre solde.</li><li>Vérifiez bien le numéro de réception : un envoi vers un numéro erroné saisi par vos soins ne peut pas toujours être récupéré.</li></ul>
+<ul><li>Générez d'abord un code de retrait sur votre compte 1xBet, puis saisissez votre ID, ce code, le montant et le numéro de réception.</li><li>Montant minimum : 500 FCFA.</li><li>Après vérification, l'argent est envoyé au numéro indiqué, en général en quelques minutes aux heures ouvrables.</li><li>Une demande est refusée si le code est invalide, déjà utilisé, ou si le montant ne correspond pas.</li><li>Vérifiez bien le numéro de réception : un envoi vers un numéro erroné saisi par vos soins ne peut pas toujours être récupéré.</li></ul>
 <h3>5. Vos données</h3>
 <p>Votre nom, votre téléphone et votre e-mail servent uniquement à gérer votre compte et vos opérations. Ils ne sont pas vendus.</p>
 <h3>6. Nous contacter</h3>
@@ -205,7 +211,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:430px;height:72px;background:#f
 <button class="logout" onclick="logout()">Se déconnecter</button></section>
 </main>
 
-<nav id="bottomNav" style="display:none"><button onclick="show('home')">⌂<small>Accueil</small></button><button onclick="show('deposit')">＋<small>Dépôt</small></button><button onclick="show('withdraw')">−<small>Retrait</small></button><button onclick="show('history')">◷<small>Historique</small></button><button onclick="show('profile')">◉<small>Profil</small></button></nav>
+<nav id="bottomNav" style="display:none"><button onclick="show('home')">⌂<small>Accueil</small></button><button onclick="show('deposit')">⚡<small>Recharge</small></button><button onclick="show('withdraw')">−<small>Retrait</small></button><button onclick="show('history')">◷<small>Historique</small></button><button onclick="show('profile')">◉<small>Profil</small></button></nav>
 </div>
 
 <script>const LOGO='data:image/jpeg;base64,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';document.querySelectorAll('[data-logo]').forEach(function(i){i.src=LOGO});</script>
@@ -227,7 +233,6 @@ function show(id){
   window.scrollTo(0,0);
   if(id==='history') loadHistory();
   if(id==='admin') loadAdmin();
-  if(id==='deposit') updatePayInfo();
   if(id==='home' || id==='profile') loadAccount();
 }
 function authMode(mode){
@@ -263,7 +268,7 @@ async function register(){
   const name = $('regName').value.trim(), phone = $('regPhone').value.trim();
   const email = $('regEmail').value.trim(), a = $('regPass').value, b = $('regPass2').value;
   if(!name || !phone || !email || !a || !b){ msg('regMsg','Veuillez remplir tous les champs.'); return; }
-  if(!$('regTerms').checked){ msg('regMsg','Vous devez accepter les conditions d\'utilisation.'); return; }
+  if(!$('regTerms').checked){ msg('regMsg','Vous devez avoir 18 ans ou plus et accepter les conditions d\'utilisation.'); return; }
   if(!validEmail(email)){ msg('regMsg','Adresse e-mail invalide.'); return; }
   if(a.length < 8){ msg('regMsg','Le mot de passe doit contenir au moins 8 caractères.'); return; }
   if(a !== b){ msg('regMsg','Les deux mots de passe ne correspondent pas.'); return; }
@@ -296,17 +301,13 @@ async function logout(){
   currentUser = null;
   $('adminBtn').style.display = 'none';
   stopAdminWatch();
-  $('balance').textContent = '— FCFA';
   show('auth');
   authMode('login');
 }
 
 async function loadAccount(){
   if(!currentUser) return;
-  const [p, w] = await Promise.all([
-    sb.from('profiles').select('full_name,phone,email').eq('id', currentUser.id).maybeSingle(),
-    sb.from('wallets').select('balance').eq('user_id', currentUser.id).maybeSingle()
-  ]);
+  const p = await sb.from('profiles').select('full_name,phone,email').eq('id', currentUser.id).maybeSingle();
   const prof = p.data || {};
   const name = prof.full_name || 'Client LMJ RECHARGE';
   $('homeName').textContent = name;
@@ -314,7 +315,6 @@ async function loadAccount(){
   $('profilePhone').textContent = prof.phone || 'Numéro non renseigné';
   $('profileEmail').textContent = prof.email || currentUser.email;
   $('avatar').textContent = name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase();
-  $('balance').textContent = w.data ? fmt(w.data.balance) : '0 FCFA';
   $('homeAvatar').textContent = $('avatar').textContent;
   loadHomeExtras();
 }
@@ -324,7 +324,7 @@ async function loadHistory(){
   if(!currentUser) return;
   box.innerHTML = '<p>Chargement…</p>';
   const { data, error } = await sb.from('transactions')
-    .select('type,amount,status,created_at')
+    .select('type,amount,status,created_at,xbet_id,paid')
     .eq('user_id', currentUser.id)
     .order('created_at', { ascending:false }).limit(50);
   if(error){ box.innerHTML = '<p>Impossible de charger l\'historique.</p>'; return; }
@@ -332,43 +332,58 @@ async function loadHistory(){
   const labels = { pending:['En attente','pending'], approved:['Validé',''], rejected:['Refusé','rejected'] };
   box.innerHTML = data.map(t=>{
     const dep = t.type==='deposit';
-    const [txt, cls] = labels[t.status] || [t.status,''];
+    const [txt, cls] = txLabel(t);
     const d = new Date(t.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
     return `<div class="tx"><span class="${dep?'green':'red'}">${dep?'↓':'↑'}</span>
-      <div><b>${dep?'Dépôt':'Retrait'}</b><small>${d}</small></div>
+      <div><b>${dep?'Dépôt 1xBet':'Retrait 1xBet'}</b><small>${d}${t.xbet_id?' · ID '+esc(t.xbet_id):''}</small></div>
       <strong>${dep?'+':'-'}${fmt(t.amount)}<br><em class="${cls}">${txt}</em></strong></div>`;
   }).join('');
 }
 
 
+function txLabel(t){
+  if(t.type==='deposit' && t.status==='pending') return t.paid ? ['Payé · en traitement','pending'] : ['En attente de paiement','pending'];
+  return ({ pending:['En attente','pending'], approved:['Validé',''], rejected:['Refusé','rejected'] })[t.status] || [t.status,''];
+}
 const esc = v => String(v==null?'':v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 async function sendDeposit(){
-  const amount = Number($('depAmount').value), method = $('depMethod').value, ref = $('depRef').value.trim();
-  if(!amount || amount < 500){ msg('depMsg','Montant minimum : 500 FCFA.'); return; }
+  const xbet = $('depXbet').value.trim(), amount = Number($('depAmount').value), method = $('depMethod').value;
+  const ph = $('depPhone').value.replace(/\D/g,'');
+  if(!/^[0-9]{6,12}$/.test(xbet)){ msg('depMsg','L\'ID 1xBet doit contenir uniquement des chiffres (6 à 12).'); return; }
+  if(!amount || amount < 100){ msg('depMsg','Montant minimum : 100 FCFA.'); return; }
   if(amount > MAX_DEPOSIT){ msg('depMsg','Montant maximum : 5 000 000 FCFA par dépôt.'); return; }
-  if(!ref){ msg('depMsg','Indiquez la référence de transaction.'); return; }
+  if(ph.length < 8 || ph.length > 10){ msg('depMsg','Saisissez le numéro de téléphone qui effectue le paiement.'); return; }
   $('depBtn').disabled = true;
-  const { error } = await sb.rpc('request_deposit', { p_amount: amount, p_method: method, p_reference: ref });
+  msg('depMsg','Envoi de la demande de paiement…');
+  const { data, error } = await sb.functions.invoke('fedapay-create', { body: { amount: amount, method: method, xbet_id: xbet, phone: ph } });
   $('depBtn').disabled = false;
   if(error){
-    msg('depMsg', (error.message||'').includes('uniq_deposit_ref') ? 'Cette référence a déjà été utilisée.' : 'Erreur : ' + error.message);
-    return;
+    let m = 'Erreur lors du paiement. Réessayez.';
+    try{ const j = await error.context.json(); if(j && j.error) m = j.error; }catch(e){}
+    msg('depMsg', m); return;
   }
-  $('depAmount').value=''; $('depRef').value='';
-  msg('depMsg','✅ Demande envoyée. Votre solde sera crédité après vérification.');
+  if(data && data.error){ msg('depMsg', data.error); return; }
+  $('depAmount').value = '';
+  msg('depMsg','📲 Une demande de paiement vient d\'être envoyée sur votre téléphone. Confirmez-la avec votre code secret. Votre compte 1xBet sera crédité après vérification.');
 }
 
 async function sendWithdrawal(){
-  const amount = Number($('wdAmount').value), method = $('wdMethod').value, phone = $('wdPhone').value.trim();
+  const xbet = $('wdXbet').value.trim(), code = $('wdCode').value.trim();
+  const amount = Number($('wdAmount').value), method = $('wdMethod').value, ph = $('wdPhone').value.replace(/\D/g,'');
+  if(!/^[0-9]{6,12}$/.test(xbet)){ msg('wdMsg','L\'ID 1xBet doit contenir uniquement des chiffres (6 à 12).'); return; }
+  if(!code){ msg('wdMsg','Indiquez le code de retrait 1xBet.'); return; }
   if(!amount || amount < 500){ msg('wdMsg','Montant minimum : 500 FCFA.'); return; }
-  if(!phone){ msg('wdMsg','Indiquez le numéro de réception.'); return; }
+  if(ph.length < 8 || ph.length > 10){ msg('wdMsg','Saisissez le numéro de réception.'); return; }
   $('wdBtn').disabled = true;
-  const { error } = await sb.rpc('request_withdrawal', { p_amount: amount, p_method: method, p_phone: phone });
+  const { error } = await sb.rpc('request_withdrawal', { p_amount: amount, p_method: method, p_phone: '+229' + ph, p_xbet_id: xbet, p_code: code });
   $('wdBtn').disabled = false;
-  if(error){ msg('wdMsg','Erreur : ' + error.message); return; }
-  $('wdAmount').value=''; $('wdPhone').value='';
-  msg('wdMsg','✅ Demande envoyée. Le montant est bloqué en attendant la validation.');
+  if(error){
+    msg('wdMsg', (error.message||'').includes('uniq_withdraw_code') ? 'Ce code de retrait a déjà été envoyé.' : 'Erreur : ' + error.message);
+    return;
+  }
+  $('wdCode').value=''; $('wdAmount').value=''; $('wdPhone').value='';
+  msg('wdMsg','✅ Demande envoyée. Vous recevrez l\'argent après vérification.');
 }
 
 let adminTimer = null, lastPending = 0;
@@ -421,8 +436,9 @@ async function loadAdmin(){
     const dep = t.type==='deposit';
     const d = new Date(t.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
     return `<div class="adm"><b>${dep?'Dépôt':'Retrait'} : ${esc(fmt(t.amount))}</b>
+      <small>ID 1xBet : <b style="display:inline;font-size:15px">${esc(t.xbet_id||'—')}</b></small>
       <small>${esc(t.full_name||'—')} · ${esc(t.client_phone||'')} · ${esc(t.email||'')}</small>
-      <small>${esc(t.method||'')} · ${dep?'Réf. '+esc(t.reference):'Envoyer à '+esc(t.phone)} · ${d}</small>
+      <small>${esc(t.method||'')} · ${dep?'✅ Payé via FedaPay · numéro '+esc(t.phone||'—')+' · Réf. '+esc(t.reference):'Code retrait <b style="display:inline">'+esc(t.withdraw_code||'—')+'</b> · Payer à '+esc(t.phone)} · ${d}</small>
       <div class="row"><button class="ok" onclick="decide('${esc(t.id)}',true)">Valider</button>
       <button class="no" onclick="decide('${esc(t.id)}',false)">Refuser</button></div></div>`;
   }).join('');
@@ -442,25 +458,6 @@ const PAY_NUMBERS = {
   'Celtiis Cash': { shown:'01 93 82 46 11', raw:'0193824611' },
   'Moov Money':   { shown:'01 65 86 45 12', raw:'0165864512' }
 };
-function updatePayInfo(){
-  const m = $('depMethod').value, p = PAY_NUMBERS[m], box = $('payInfo');
-  box.textContent = '';
-  if(!p){ box.textContent = m + ' : numéro bientôt disponible. Choisissez un autre réseau ou contactez LMJ RECHARGE.'; return; }
-  const l1 = document.createElement('div');
-  l1.textContent = '1. Envoyez l\'argent par ' + m + ' à :';
-  const l2 = document.createElement('div');
-  l2.style.cssText = 'font-size:22px;font-weight:bold;margin:8px 0';
-  l2.textContent = p.shown;
-  const l3 = document.createElement('div');
-  l3.textContent = 'Nom : ' + PAY_NAME;
-  const btn = document.createElement('button');
-  btn.className = 'primary'; btn.style.marginTop = '12px'; btn.textContent = 'Copier le numéro';
-  btn.onclick = async () => { try{ await navigator.clipboard.writeText(p.raw); btn.textContent = 'Numéro copié ✓'; }catch(e){ btn.textContent = p.raw; } };
-  const l4 = document.createElement('div');
-  l4.style.marginTop = '12px';
-  l4.textContent = '2. Vérifiez que le nom affiché correspond, puis saisissez ci-dessous le montant et la référence reçue par SMS.';
-  box.append(l1, l2, l3, btn, l4);
-}
 
 async function loadAdminHistory(){
   const box = $('adminHistory');
@@ -471,7 +468,7 @@ async function loadAdminHistory(){
     const dep = t.type==='deposit', ok = t.status==='approved';
     const d = t.processed_at ? new Date(t.processed_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
     return `<div class="adm"><b>${dep?'Dépôt':'Retrait'} : ${esc(fmt(t.amount))} <span style="color:${ok?'#0a9c5c':'#d22'}">${ok?'Validé':'Refusé'}</span></b>
-      <small>${esc(t.full_name||'—')} · ${esc(t.method||'')} · ${dep?'Réf. '+esc(t.reference):esc(t.phone)} · ${d}</small></div>`;
+      <small>ID ${esc(t.xbet_id||'—')} · ${esc(t.full_name||'—')} · ${esc(t.method||'')} · ${d}</small></div>`;
   }).join('');
 }
 
@@ -484,7 +481,7 @@ async function loadHomeExtras(){
   if(!currentUser) return;
   const [ok, last] = await Promise.all([
     sb.from('transactions').select('type,amount').eq('user_id', currentUser.id).eq('status','approved'),
-    sb.from('transactions').select('type,amount,status,created_at').eq('user_id', currentUser.id).order('created_at',{ascending:false}).limit(3)
+    sb.from('transactions').select('type,amount,status,created_at,paid').eq('user_id', currentUser.id).order('created_at',{ascending:false}).limit(3)
   ]);
   let tin = 0, tout = 0;
   (ok.data||[]).forEach(t => { if(t.type==='deposit') tin += Number(t.amount); else tout += Number(t.amount); });
@@ -496,7 +493,7 @@ async function loadHomeExtras(){
   const labels = { pending:['En attente','pending'], approved:['Validé',''], rejected:['Refusé','rejected'] };
   box.innerHTML = last.data.map(t=>{
     const dep = t.type==='deposit';
-    const [txt, cls] = labels[t.status] || [t.status,''];
+    const [txt, cls] = txLabel(t);
     const d = new Date(t.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
     return `<div class="tx"><span class="${dep?'green':'red'}">${dep?'↓':'↑'}</span>
       <div><b>${dep?'Dépôt':'Retrait'}</b><small>${d}</small></div>
